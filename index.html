@@ -9,7 +9,6 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -32,7 +31,6 @@
     }
   </script>
 
-  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
@@ -48,7 +46,7 @@
 </head>
 <body class="text-gray-100 min-h-screen flex flex-col justify-between">
 
-  <!-- ================= VISTA DE LOGIN ================= -->
+  <!-- ================= VISTA LOGIN ================= -->
   <div id="viewAuth" class="min-h-screen flex items-center justify-center p-4">
     <div class="w-full max-w-sm bg-brand-card border border-brand-border rounded-3xl p-6 shadow-2xl relative overflow-hidden">
       <div class="text-center mb-6">
@@ -73,7 +71,7 @@
         </div>
 
         <div class="p-2.5 rounded-xl bg-brand-surface border border-brand-border text-[11px] text-gray-400 flex items-center justify-between">
-          <span>Acceso Rápido Demo:</span>
+          <span>Acceso Rápido:</span>
           <span class="text-brand-orange font-mono font-bold">admin123</span>
         </div>
 
@@ -104,15 +102,15 @@
     </header>
 
     <main class="p-4 max-w-lg mx-auto w-full space-y-4">
-      <!-- Tarjetas de Resumen -->
+      <!-- Tarjetas de Resumen Dinámicas -->
       <div class="grid grid-cols-2 gap-3">
         <div class="bg-brand-card border border-brand-border rounded-2xl p-4">
           <div class="flex justify-between items-start">
             <span class="text-xs text-gray-400 font-medium">Total Clientes</span>
             <i data-lucide="users" class="w-4 h-4 text-brand-orange"></i>
           </div>
-          <div class="text-2xl font-black text-white mt-1">3</div>
-          <div class="text-[10px] text-emerald-400 mt-1">1 activos</div>
+          <div id="statTotal" class="text-2xl font-black text-white mt-1">0</div>
+          <div id="statActivos" class="text-[10px] text-emerald-400 mt-1">0 activos</div>
         </div>
 
         <div class="bg-brand-card border border-brand-border rounded-2xl p-4">
@@ -120,7 +118,7 @@
             <span class="text-xs text-gray-400 font-medium">Por Vencer (1-5d)</span>
             <i data-lucide="clock" class="w-4 h-4 text-amber-400"></i>
           </div>
-          <div class="text-2xl font-black text-amber-400 mt-1">1</div>
+          <div id="statPorVencer" class="text-2xl font-black text-amber-400 mt-1">0</div>
           <div class="text-[10px] text-gray-400 mt-1">Cobro pendiente</div>
         </div>
 
@@ -129,108 +127,114 @@
             <span class="text-xs text-gray-400 font-medium">Cuentas Vencidas</span>
             <i data-lucide="alert-circle" class="w-4 h-4 text-rose-500"></i>
           </div>
-          <div class="text-2xl font-black text-white mt-1">1</div>
+          <div id="statVencidos" class="text-2xl font-black text-white mt-1">0</div>
           <div class="text-[10px] text-rose-400 mt-1">Señal suspendida</div>
         </div>
 
         <div class="bg-brand-card border border-brand-border rounded-2xl p-4">
           <div class="flex justify-between items-start">
-            <span class="text-xs text-gray-400 font-medium">Ingresos Historial</span>
+            <span class="text-xs text-gray-400 font-medium">Ingresos Estimados</span>
             <i data-lucide="wallet" class="w-4 h-4 text-emerald-400"></i>
           </div>
-          <div class="text-2xl font-black text-white mt-1">S/ 60.00</div>
-          <div class="text-[10px] text-gray-400 mt-1">En caja soles</div>
+          <div id="statCaja" class="text-2xl font-black text-white mt-1">S/ 0.00</div>
+          <div class="text-[10px] text-gray-400 mt-1">En soles mensuales</div>
         </div>
       </div>
 
-      <!-- Acciones Inmediatas -->
-      <div>
-        <p class="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">Acciones Inmediatas</p>
-        <div class="grid grid-cols-2 gap-3">
-          <div class="bg-brand-card border border-brand-border rounded-2xl p-3.5 flex items-center gap-3">
-            <div class="p-2.5 rounded-xl bg-amber-500/10 text-amber-400">
-              <i data-lucide="bell" class="w-5 h-5"></i>
-            </div>
-            <div>
-              <p class="text-xs font-bold text-white">Alertas WS</p>
-              <p class="text-[10px] text-gray-400">Recordatorios</p>
-            </div>
-          </div>
-          <div class="bg-brand-card border border-brand-border rounded-2xl p-3.5 flex items-center gap-3">
-            <div class="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400">
-              <i data-lucide="sheet" class="w-5 h-5"></i>
-            </div>
-            <div>
-              <p class="text-xs font-bold text-white">Excel Sync</p>
-              <p class="text-[10px] text-gray-400">Importar / Exportar</p>
-            </div>
-          </div>
-        </div>
+      <!-- Botón Agregar Nuevo Cliente -->
+      <div class="flex gap-2">
+        <button onclick="openModal()" class="flex-1 py-3 px-4 bg-brand-orange hover:bg-brand-orangeHover active:scale-98 rounded-2xl font-bold text-xs uppercase tracking-wider text-white flex items-center justify-center gap-2 shadow-lg shadow-brand-orange/20">
+          <i data-lucide="user-plus" class="w-4 h-4"></i>
+          <span>Agregar Nuevo Cliente</span>
+        </button>
       </div>
 
-      <!-- Lista Próximos a Vencer -->
+      <!-- Buscador -->
+      <div class="relative">
+        <input type="text" id="searchInput" oninput="renderClients()" placeholder="Buscar cliente por nombre o teléfono..."
+          class="w-full pl-10 pr-4 py-2.5 bg-brand-card border border-brand-border rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-orange">
+        <i data-lucide="search" class="w-4 h-4 text-gray-500 absolute left-3 top-3"></i>
+      </div>
+
+      <!-- Lista de Clientes Dinámica -->
       <div>
         <div class="flex justify-between items-center mb-2">
-          <p class="text-[11px] font-bold uppercase tracking-wider text-gray-400">Próximos a Vencer (Urgente)</p>
-          <span class="text-[10px] text-brand-orange font-bold">Prioridad Alta</span>
+          <p class="text-[11px] font-bold uppercase tracking-wider text-gray-400">Gestión de Clientes</p>
+          <span id="clientCountBadge" class="text-[10px] text-brand-orange font-bold"></span>
         </div>
-        <div class="space-y-2">
-          <div class="bg-brand-card border border-brand-border rounded-2xl p-3.5 flex items-center justify-between">
-            <div>
-              <div class="flex items-center gap-2">
-                <p class="text-xs font-bold text-white">Patricia Valenzuela</p>
-                <span class="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-400 text-[9px] font-bold">Vencido</span>
-              </div>
-              <p class="text-[10px] text-gray-400 mt-0.5">TV Box Xiaomi • Vence: 2026-11-03</p>
-            </div>
-            <div class="flex items-center gap-2">
-              <button class="px-2.5 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold">+1 Mes</button>
-              <a href="https://wa.me/51999999999?text=Hola%20Patricia,%20le%20saludamos%20de%20MAX%20PLAYER.%20Su%20servicio%20ha%20vencido.%20Puede%20renovarlo%20por%20Yape." 
-                 target="_blank" class="p-2 bg-emerald-500 text-white rounded-xl">
-                <i data-lucide="message-circle" class="w-4 h-4"></i>
-              </a>
-            </div>
-          </div>
-
-          <div class="bg-brand-card border border-brand-border rounded-2xl p-3.5 flex items-center justify-between">
-            <div>
-              <div class="flex items-center gap-2">
-                <p class="text-xs font-bold text-white">Miguel Ángel Torres</p>
-                <span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 text-[9px] font-bold">Vence en 2d</span>
-              </div>
-              <p class="text-[10px] text-gray-400 mt-0.5">Smart TV Samsung • Vence: 2026-11-07</p>
-            </div>
-            <div class="flex items-center gap-2">
-              <button class="px-2.5 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold">+1 Mes</button>
-              <a href="https://wa.me/51999999999?text=Hola%20Miguel,%20le%20saludamos%20de%20MAX%20PLAYER.%20Su%20cuenta%20vence%20en%202%20d%C3%ADas." 
-                 target="_blank" class="p-2 bg-emerald-500 text-white rounded-xl">
-                <i data-lucide="message-circle" class="w-4 h-4"></i>
-              </a>
-            </div>
-          </div>
+        <div id="clientList" class="space-y-2">
+          <!-- Render dinámico desde localStorage -->
         </div>
       </div>
     </main>
 
+    <!-- Modal Formulario de Cliente -->
+    <div id="clientModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div class="w-full max-w-sm bg-brand-card border border-brand-border rounded-3xl p-5 shadow-2xl space-y-3">
+        <div class="flex justify-between items-center border-b border-brand-border pb-2">
+          <h2 id="modalTitle" class="text-sm font-bold text-white">Nuevo Cliente</h2>
+          <button onclick="closeModal()" class="text-gray-400 hover:text-white">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <form id="clientForm" onsubmit="saveClient(event)" class="space-y-3">
+          <input type="hidden" id="clientId">
+          <div>
+            <label class="block text-[11px] font-semibold text-gray-300 mb-1">Nombre Completo</label>
+            <input type="text" id="clientName" required placeholder="Ej: Patricia Valenzuela"
+              class="w-full px-3 py-2 bg-brand-black border border-brand-border rounded-xl text-xs text-white focus:outline-none focus:border-brand-orange">
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[11px] font-semibold text-gray-300 mb-1">WhatsApp</label>
+              <input type="tel" id="clientPhone" required placeholder="987654321"
+                class="w-full px-3 py-2 bg-brand-black border border-brand-border rounded-xl text-xs text-white focus:outline-none focus:border-brand-orange">
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-gray-300 mb-1">Precio (S/)</label>
+              <input type="number" id="clientPrice" required value="20"
+                class="w-full px-3 py-2 bg-brand-black border border-brand-border rounded-xl text-xs text-white focus:outline-none focus:border-brand-orange">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[11px] font-semibold text-gray-300 mb-1">Dispositivo / App</label>
+              <input type="text" id="clientDevice" placeholder="TV Box / Smart TV"
+                class="w-full px-3 py-2 bg-brand-black border border-brand-border rounded-xl text-xs text-white focus:outline-none focus:border-brand-orange">
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-gray-300 mb-1">Fecha Vencimiento</label>
+              <input type="date" id="clientDate" required
+                class="w-full px-3 py-2 bg-brand-black border border-brand-border rounded-xl text-xs text-white focus:outline-none focus:border-brand-orange">
+            </div>
+          </div>
+
+          <div class="flex gap-2 pt-2">
+            <button type="button" onclick="closeModal()" class="w-1/3 py-2.5 bg-brand-surface rounded-xl text-xs font-semibold text-gray-300">
+              Cancelar
+            </button>
+            <button type="submit" class="w-2/3 py-2.5 bg-brand-orange rounded-xl text-xs font-bold text-white shadow-lg shadow-brand-orange/20">
+              Guardar Cliente
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <!-- Barra Inferior -->
     <nav class="fixed bottom-0 left-0 right-0 bg-brand-card/95 border-t border-brand-border py-2.5 px-6 flex justify-around items-center backdrop-blur z-40">
-      <button class="flex flex-col items-center text-brand-orange gap-1">
+      <button onclick="renderClients()" class="flex flex-col items-center text-brand-orange gap-1">
         <i data-lucide="layout-grid" class="w-5 h-5"></i>
         <span class="text-[10px] font-bold">Inicio</span>
       </button>
-      <button class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
-        <i data-lucide="users" class="w-5 h-5"></i>
-        <span class="text-[10px]">Clientes</span>
+      <button onclick="openModal()" class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
+        <i data-lucide="user-plus" class="w-5 h-5"></i>
+        <span class="text-[10px]">Añadir</span>
       </button>
-      <button class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
-        <i data-lucide="bell" class="w-5 h-5"></i>
-        <span class="text-[10px]">Alertas</span>
-      </button>
-      <button class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
-        <i data-lucide="wallet" class="w-5 h-5"></i>
-        <span class="text-[10px]">Caja</span>
-      </button>
-      <button class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
+      <button onclick="alert('Clientes sincronizados y guardados en tu teléfono.')" class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
         <i data-lucide="database" class="w-5 h-5"></i>
         <span class="text-[10px]">Datos</span>
       </button>
@@ -238,6 +242,19 @@
   </div>
 
   <script>
+    const defaultClients = [
+      { id: 1, name: "Patricia Valenzuela", phone: "971822865", device: "TV Box Xiaomi", price: 20, expires: "2026-11-03" },
+      { id: 2, name: "Miguel Ángel Torres", phone: "987654321", device: "Smart TV Samsung", price: 20, expires: "2026-11-08" },
+      { id: 3, name: "Carlos Mendoza", phone: "991234567", device: "Firestick 4K", price: 20, expires: "2026-11-25" }
+    ];
+
+    let clients = JSON.parse(localStorage.getItem('maxplayer_clients')) || defaultClients;
+
+    function saveToStorage() {
+      localStorage.setItem('maxplayer_clients', JSON.stringify(clients));
+      renderClients();
+    }
+
     function updateClock() {
       const now = new Date();
       const clockEl = document.getElementById('liveClock');
@@ -252,12 +269,183 @@
       if (e) e.preventDefault();
       document.getElementById('viewAuth').classList.add('hidden');
       document.getElementById('viewMain').classList.remove('hidden');
+      renderClients();
       lucide.createIcons();
     }
 
     function logout() {
       document.getElementById('viewMain').classList.add('hidden');
       document.getElementById('viewAuth').classList.remove('hidden');
+    }
+
+    function calculateDays(expireDate) {
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      const exp = new Date(expireDate + 'T00:00:00');
+      const diffTime = exp - today;
+      return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    }
+
+    function renderClients() {
+      const search = (document.getElementById('searchInput')?.value || '').toLowerCase();
+      const listEl = document.getElementById('clientList');
+      if (!listEl) return;
+
+      const filtered = clients.filter(c => c.name.toLowerCase().includes(search) || c.phone.includes(search));
+
+      let total = clients.length;
+      let activos = 0;
+      let porVencer = 0;
+      let vencidos = 0;
+      let cajaTotal = 0;
+
+      listEl.innerHTML = '';
+
+      filtered.forEach(c => {
+        cajaTotal += Number(c.price || 0);
+        const days = calculateDays(c.expires);
+
+        let badgeHtml = '';
+        let statusMsg = '';
+
+        if (days < 0) {
+          vencidos++;
+          badgeHtml = `<span class="px-2 py-0.5 rounded-md bg-rose-500/20 text-rose-400 text-[10px] font-bold">Vencido (${Math.abs(days)}d)</span>`;
+          statusMsg = `Hola ${c.name}, le saludamos de MAX PLAYER. Su servicio IPTV ha vencido el ${c.expires}. Puede renovarlo por Yape para restablecer su señal.`;
+        } else if (days <= 5) {
+          porVencer++;
+          badgeHtml = `<span class="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-400 text-[10px] font-bold">Vence en ${days}d</span>`;
+          statusMsg = `Hola ${c.name}, le saludamos de MAX PLAYER. Su cuenta vencerá en ${days} días (${c.expires}). Le recordamos renovar con anticipación por Yape.`;
+        } else {
+          activos++;
+          badgeHtml = `<span class="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">Activo (${days}d)</span>`;
+          statusMsg = `Hola ${c.name}, le saludamos de MAX PLAYER. Su servicio se encuentra activo hasta el ${c.expires}.`;
+        }
+
+        const phoneClean = c.phone.replace(/[^0-9]/g, '');
+        const fullPhone = phoneClean.startsWith('51') ? phoneClean : '51' + phoneClean;
+        const waLink = `https://wa.me/${fullPhone}?text=${encodeURIComponent(statusMsg)}`;
+
+        const card = document.createElement('div');
+        card.className = "bg-brand-card border border-brand-border rounded-2xl p-3.5 space-y-2";
+        card.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="flex items-center gap-2">
+                <p class="text-xs font-bold text-white">${c.name}</p>
+                ${badgeHtml}
+              </div>
+              <p class="text-[10px] text-gray-400 mt-0.5">${c.device || 'Dispositivo TV'} • S/ ${c.price}.00 • Vence: ${c.expires}</p>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button onclick="editClient(${c.id})" class="p-1.5 text-gray-400 hover:text-white rounded-lg bg-brand-surface">
+                <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+              </button>
+              <button onclick="deleteClient(${c.id})" class="p-1.5 text-rose-400 hover:text-rose-300 rounded-lg bg-brand-surface">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+          <div class="flex items-center justify-between pt-1 border-t border-brand-border/40">
+            <button onclick="addOneMonth(${c.id})" class="px-3 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-xl text-[11px] font-bold hover:bg-emerald-500/20 active:scale-95 transition">
+              +1 Mes (Renovar)
+            </button>
+            <a href="${waLink}" target="_blank" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-[11px] font-bold flex items-center gap-1.5 shadow-md shadow-emerald-900/30">
+              <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+              <span>Enviar WhatsApp</span>
+            </a>
+          </div>
+        `;
+        listEl.appendChild(card);
+      });
+
+      document.getElementById('statTotal').textContent = total;
+      document.getElementById('statActivos').textContent = `${activos} activos`;
+      document.getElementById('statPorVencer').textContent = porVencer;
+      document.getElementById('statVencidos').textContent = vencidos;
+      document.getElementById('statCaja').textContent = `S/ ${cajaTotal.toFixed(2)}`;
+      document.getElementById('clientCountBadge').textContent = `${filtered.length} registrados`;
+
+      lucide.createIcons();
+    }
+
+    function addOneMonth(id) {
+      const client = clients.find(c => c.id === id);
+      if (!client) return;
+
+      const base = new Date(client.expires + 'T00:00:00');
+      base.setMonth(base.getMonth() + 1);
+      client.expires = base.toISOString().split('T')[0];
+      saveToStorage();
+    }
+
+    function deleteClient(id) {
+      if (confirm('¿Deseas eliminar este cliente?')) {
+        clients = clients.filter(c => c.id !== id);
+        saveToStorage();
+      }
+    }
+
+    function openModal() {
+      document.getElementById('clientForm').reset();
+      document.getElementById('clientId').value = '';
+      document.getElementById('modalTitle').textContent = 'Nuevo Cliente';
+
+      const nextMonth = new Date();
+      nextMonth.setMonth(nextMonth.getMonth() + 1);
+      document.getElementById('clientDate').value = nextMonth.toISOString().split('T')[0];
+
+      document.getElementById('clientModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeModal() {
+      document.getElementById('clientModal').classList.add('hidden');
+    }
+
+    function editClient(id) {
+      const client = clients.find(c => c.id === id);
+      if (!client) return;
+
+      document.getElementById('clientId').value = client.id;
+      document.getElementById('clientName').value = client.name;
+      document.getElementById('clientPhone').value = client.phone;
+      document.getElementById('clientPrice').value = client.price;
+      document.getElementById('clientDevice').value = client.device;
+      document.getElementById('clientDate').value = client.expires;
+      document.getElementById('modalTitle').textContent = 'Editar Cliente';
+
+      document.getElementById('clientModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function saveClient(e) {
+      e.preventDefault();
+      const id = document.getElementById('clientId').value;
+      const name = document.getElementById('clientName').value.trim();
+      const phone = document.getElementById('clientPhone').value.trim();
+      const price = parseFloat(document.getElementById('clientPrice').value) || 20;
+      const device = document.getElementById('clientDevice').value.trim() || 'Smart TV';
+      const expires = document.getElementById('clientDate').value;
+
+      if (id) {
+        const index = clients.findIndex(c => c.id == id);
+        if (index !== -1) {
+          clients[index] = { id: Number(id), name, phone, price, device, expires };
+        }
+      } else {
+        clients.push({
+          id: Date.now(),
+          name,
+          phone,
+          price,
+          device,
+          expires
+        });
+      }
+
+      saveToStorage();
+      closeModal();
     }
 
     window.addEventListener('DOMContentLoaded', () => {
