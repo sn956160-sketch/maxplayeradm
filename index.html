@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es" class="dark">
 <head>
@@ -6,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>MAX PLAYER ADMIN - Panel IPTV Pro</title>
   <meta name="theme-color" content="#08080a">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <!-- Tailwind CSS CDN -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -24,7 +24,6 @@
               border: '#22222e',
               orange: '#ff6600',
               orangeHover: '#ff7b1a',
-              orangeDark: '#cc5200',
               emerald: '#10b981'
             }
           }
@@ -36,83 +35,234 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- SheetJS para Excel -->
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-
   <style>
     body {
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
       background-color: #08080a;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      font-family: system-ui, -apple-system, sans-serif;
     }
-    input, textarea, select {
-      user-select: text;
-    }
-    .pb-safe-nav {
-      padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
-    }
-    ::-webkit-scrollbar {
-      width: 4px;
-      height: 4px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #2a2a38;
-      border-radius: 999px;
-    }
+    input, textarea, select { user-select: text; }
   </style>
 </head>
 <body class="text-gray-100 min-h-screen flex flex-col justify-between">
 
-  <!-- ================= PANTALLA DE ACCESO (LOGIN) ================= -->
+  <!-- ================= VISTA DE LOGIN ================= -->
   <div id="viewAuth" class="min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-sm bg-brand-card border border-brand-border rounded-3xl p-6 sm:p-7 shadow-2xl relative overflow-hidden">
-      <div class="absolute -top-12 -right-12 w-36 h-36 bg-brand-orange/20 rounded-full blur-3xl pointer-events-none"></div>
-      <div class="absolute -bottom-10 -left-10 w-28 h-28 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
-
-      <div class="text-center mb-6 relative z-10">
-        <div class="inline-flex p-3.5 rounded-2xl bg-brand-orange/10 border border-brand-orange/30 text-brand-orange mb-3 shadow-inner">
-          <i data-lucide="tv" class="w-9 h-9"></i>
+    <div class="w-full max-w-sm bg-brand-card border border-brand-border rounded-3xl p-6 shadow-2xl relative overflow-hidden">
+      <div class="text-center mb-6">
+        <div class="inline-flex p-3 rounded-2xl bg-brand-orange/10 border border-brand-orange/30 text-brand-orange mb-3">
+          <i data-lucide="tv" class="w-8 h-8"></i>
         </div>
-        <h1 class="text-2xl font-black tracking-wider text-white">MAX <span class="text-brand-orange">PLAYER</span></h1>
+        <h1 class="text-2xl font-black text-white">MAX <span class="text-brand-orange">PLAYER</span></h1>
         <p class="text-[11px] text-gray-400 mt-1 uppercase tracking-widest font-semibold">Administración IPTV & Streaming</p>
       </div>
 
-      <form id="loginForm" class="space-y-4 relative z-10" onsubmit="handleLogin(event)">
+      <form id="loginForm" class="space-y-4" onsubmit="handleLogin(event)">
         <div>
-          <label class="block text-xs font-semibold text-gray-300 mb-1.5">Correo Electrónico</label>
-          <div class="relative">
-            <i data-lucide="mail" class="w-4 h-4 text-gray-500 absolute left-3.5 top-3.5"></i>
-            <input type="email" id="loginEmail" required value="admin@maxplayer.com"
-              class="w-full pl-10 pr-3 py-3 bg-brand-black border border-brand-border rounded-xl text-xs text-white placeholder-gray-600 focus:outline-none focus:border-brand-orange transition">
-          </div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">Correo Electrónico</label>
+          <input type="email" id="loginEmail" required value="admin@maxplayer.com"
+            class="w-full px-3 py-3 bg-brand-black border border-brand-border rounded-xl text-xs text-white focus:outline-none focus:border-brand-orange">
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-gray-300 mb-1.5">Contraseña</label>
-          <div class="relative">
-            <i data-lucide="lock" class="w-4 h-4 text-gray-500 absolute left-3.5 top-3.5"></i>
-            <input type="password" id="loginPassword" required value="admin123"
-              class="w-full pl-10 pr-3 py-3 bg-brand-black border border-brand-border rounded-xl text-xs text-white placeholder-gray-600 focus:outline-none focus:border-brand-orange transition">
-          </div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">Contraseña</label>
+          <input type="password" id="loginPassword" required value="admin123"
+            class="w-full px-3 py-3 bg-brand-black border border-brand-border rounded-xl text-xs text-white focus:outline-none focus:border-brand-orange">
         </div>
 
-        <div class="p-2.5 rounded-xl bg-brand-surface/70 border border-brand-border/60 text-[11px] text-gray-400 flex items-center justify-between">
+        <div class="p-2.5 rounded-xl bg-brand-surface border border-brand-border text-[11px] text-gray-400 flex items-center justify-between">
           <span>Acceso Rápido Demo:</span>
           <span class="text-brand-orange font-mono font-bold">admin123</span>
         </div>
 
-        <button type="submit" id="loginBtn"
-          class="w-full py-3.5 bg-brand-orange hover:bg-brand-orangeHover active:scale-[0.98] font-bold rounded-xl text-white text-xs tracking-wider uppercase transition shadow-lg shadow-brand-orange/20 flex items-center justify-center gap-2">
-          <span>Entrar al Panel</span>
-          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        <button type="submit"
+          class="w-full py-3.5 bg-brand-orange hover:bg-brand-orangeHover active:scale-95 font-bold rounded-xl text-white text-xs tracking-wider uppercase transition shadow-lg shadow-brand-orange/20">
+          Entrar al Panel
         </button>
-
-        <p id="loginError" class="text-xs text-rose-400 text-center font-medium hidden"></p>
       </form>
     </div>
   </div>
 
-  <!-- ================= APLICACIÓN PRINCIPAL ===============
-  
+  <!-- ================= PANEL PRINCIPAL ================= -->
+  <div id="viewMain" class="hidden flex-1 flex flex-col pb-24">
+    <!-- Header -->
+    <header class="p-4 border-b border-brand-border flex items-center justify-between bg-brand-card/60 backdrop-blur sticky top-0 z-30">
+      <div class="flex items-center gap-3">
+        <div class="p-2 rounded-xl bg-brand-orange/10 border border-brand-orange/30 text-brand-orange">
+          <i data-lucide="tv" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h1 class="text-sm font-black text-white">MAX <span class="text-brand-orange">PLAYER</span></h1>
+          <p id="liveClock" class="text-[10px] text-gray-400 font-mono"></p>
+        </div>
+      </div>
+      <button onclick="logout()" class="p-2 rounded-xl bg-brand-surface text-gray-400 hover:text-white">
+        <i data-lucide="log-out" class="w-4 h-4"></i>
+      </button>
+    </header>
+
+    <main class="p-4 max-w-lg mx-auto w-full space-y-4">
+      <!-- Tarjetas de Resumen -->
+      <div class="grid grid-cols-2 gap-3">
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-4">
+          <div class="flex justify-between items-start">
+            <span class="text-xs text-gray-400 font-medium">Total Clientes</span>
+            <i data-lucide="users" class="w-4 h-4 text-brand-orange"></i>
+          </div>
+          <div class="text-2xl font-black text-white mt-1">3</div>
+          <div class="text-[10px] text-emerald-400 mt-1">1 activos</div>
+        </div>
+
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-4">
+          <div class="flex justify-between items-start">
+            <span class="text-xs text-gray-400 font-medium">Por Vencer (1-5d)</span>
+            <i data-lucide="clock" class="w-4 h-4 text-amber-400"></i>
+          </div>
+          <div class="text-2xl font-black text-amber-400 mt-1">1</div>
+          <div class="text-[10px] text-gray-400 mt-1">Cobro pendiente</div>
+        </div>
+
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-4">
+          <div class="flex justify-between items-start">
+            <span class="text-xs text-gray-400 font-medium">Cuentas Vencidas</span>
+            <i data-lucide="alert-circle" class="w-4 h-4 text-rose-500"></i>
+          </div>
+          <div class="text-2xl font-black text-white mt-1">1</div>
+          <div class="text-[10px] text-rose-400 mt-1">Señal suspendida</div>
+        </div>
+
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-4">
+          <div class="flex justify-between items-start">
+            <span class="text-xs text-gray-400 font-medium">Ingresos Historial</span>
+            <i data-lucide="wallet" class="w-4 h-4 text-emerald-400"></i>
+          </div>
+          <div class="text-2xl font-black text-white mt-1">S/ 60.00</div>
+          <div class="text-[10px] text-gray-400 mt-1">En caja soles</div>
+        </div>
+      </div>
+
+      <!-- Acciones Inmediatas -->
+      <div>
+        <p class="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">Acciones Inmediatas</p>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-brand-card border border-brand-border rounded-2xl p-3.5 flex items-center gap-3">
+            <div class="p-2.5 rounded-xl bg-amber-500/10 text-amber-400">
+              <i data-lucide="bell" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <p class="text-xs font-bold text-white">Alertas WS</p>
+              <p class="text-[10px] text-gray-400">Recordatorios</p>
+            </div>
+          </div>
+          <div class="bg-brand-card border border-brand-border rounded-2xl p-3.5 flex items-center gap-3">
+            <div class="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400">
+              <i data-lucide="sheet" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <p class="text-xs font-bold text-white">Excel Sync</p>
+              <p class="text-[10px] text-gray-400">Importar / Exportar</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lista Próximos a Vencer -->
+      <div>
+        <div class="flex justify-between items-center mb-2">
+          <p class="text-[11px] font-bold uppercase tracking-wider text-gray-400">Próximos a Vencer (Urgente)</p>
+          <span class="text-[10px] text-brand-orange font-bold">Prioridad Alta</span>
+        </div>
+        <div class="space-y-2">
+          <div class="bg-brand-card border border-brand-border rounded-2xl p-3.5 flex items-center justify-between">
+            <div>
+              <div class="flex items-center gap-2">
+                <p class="text-xs font-bold text-white">Patricia Valenzuela</p>
+                <span class="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-400 text-[9px] font-bold">Vencido</span>
+              </div>
+              <p class="text-[10px] text-gray-400 mt-0.5">TV Box Xiaomi • Vence: 2026-11-03</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button class="px-2.5 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold">+1 Mes</button>
+              <a href="https://wa.me/51999999999?text=Hola%20Patricia,%20le%20saludamos%20de%20MAX%20PLAYER.%20Su%20servicio%20ha%20vencido.%20Puede%20renovarlo%20por%20Yape." 
+                 target="_blank" class="p-2 bg-emerald-500 text-white rounded-xl">
+                <i data-lucide="message-circle" class="w-4 h-4"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="bg-brand-card border border-brand-border rounded-2xl p-3.5 flex items-center justify-between">
+            <div>
+              <div class="flex items-center gap-2">
+                <p class="text-xs font-bold text-white">Miguel Ángel Torres</p>
+                <span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 text-[9px] font-bold">Vence en 2d</span>
+              </div>
+              <p class="text-[10px] text-gray-400 mt-0.5">Smart TV Samsung • Vence: 2026-11-07</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button class="px-2.5 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold">+1 Mes</button>
+              <a href="https://wa.me/51999999999?text=Hola%20Miguel,%20le%20saludamos%20de%20MAX%20PLAYER.%20Su%20cuenta%20vence%20en%202%20d%C3%ADas." 
+                 target="_blank" class="p-2 bg-emerald-500 text-white rounded-xl">
+                <i data-lucide="message-circle" class="w-4 h-4"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Barra Inferior -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-brand-card/95 border-t border-brand-border py-2.5 px-6 flex justify-around items-center backdrop-blur z-40">
+      <button class="flex flex-col items-center text-brand-orange gap-1">
+        <i data-lucide="layout-grid" class="w-5 h-5"></i>
+        <span class="text-[10px] font-bold">Inicio</span>
+      </button>
+      <button class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
+        <i data-lucide="users" class="w-5 h-5"></i>
+        <span class="text-[10px]">Clientes</span>
+      </button>
+      <button class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
+        <i data-lucide="bell" class="w-5 h-5"></i>
+        <span class="text-[10px]">Alertas</span>
+      </button>
+      <button class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
+        <i data-lucide="wallet" class="w-5 h-5"></i>
+        <span class="text-[10px]">Caja</span>
+      </button>
+      <button class="flex flex-col items-center text-gray-400 hover:text-white gap-1">
+        <i data-lucide="database" class="w-5 h-5"></i>
+        <span class="text-[10px]">Datos</span>
+      </button>
+    </nav>
+  </div>
+
+  <script>
+    function updateClock() {
+      const now = new Date();
+      const clockEl = document.getElementById('liveClock');
+      if (clockEl) {
+        clockEl.textContent = now.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+      }
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    function handleLogin(e) {
+      if (e) e.preventDefault();
+      document.getElementById('viewAuth').classList.add('hidden');
+      document.getElementById('viewMain').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function logout() {
+      document.getElementById('viewMain').classList.add('hidden');
+      document.getElementById('viewAuth').classList.remove('hidden');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
